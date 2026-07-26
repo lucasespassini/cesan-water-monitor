@@ -13,6 +13,7 @@ type Env struct {
 	RedisUser       string
 	RedisPassword   string
 	TelegramToken   string
+	TelegramChatId  string
 	Environment     string
 }
 
@@ -26,6 +27,7 @@ func NewEnv() *Env {
 		RedisUser:       os.Getenv("REDIS_USER"),
 		RedisPassword:   os.Getenv("REDIS_PASSWORD"),
 		TelegramToken:   os.Getenv("TELEGRAM_TOKEN"),
+		TelegramChatId:  os.Getenv("TELEGRAM_CHAT_ID"),
 		Environment:     os.Getenv("ENVIRONMENT"),
 	}
 }

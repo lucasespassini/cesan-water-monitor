@@ -71,7 +71,7 @@ func (u MonitorWaterOutageUseCase) Run(ctx context.Context) error {
 
 		key := newsKey(href)
 
-		ok, err := u.Redis.SetNX(ctx, key, 1, 30*24*time.Hour).Result()
+		ok, err := u.Redis.SetNX(ctx, key, 1, 6*30*24*time.Hour).Result()
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -81,17 +81,28 @@ func (u MonitorWaterOutageUseCase) Run(ctx context.Context) error {
 			return
 		}
 
-		err = NotifyWaterOutage(
-			ctx,
-			u.Telegram,
-			-1004491522361,
-			normalizedTitle,
-			e.Request.AbsoluteURL(href),
-		)
+		TelegramChatId, err := strconv.ParseInt(u.Env.TelegramChatId, 10, 64)
 		if err != nil {
-			log.Printf("failed to send Telegram notification: %v", err)
+			log.Printf("failed to parse TelegramChatId: %v", err)
 			return
 		}
+
+		if err := NotifyWaterOutage(
+			ctx,
+			u.Telegram,
+			TelegramChatId,
+			normalizedTitle,
+			e.Request.AbsoluteURL(href),
+		); err != nil {
+			log.Printf("failed to send Telegram notification: %v", err)
+
+			if err := u.Redis.Del(ctx, key).Err(); err != nil {
+				log.Printf("failed to remove redis key %s: %v", key, err)
+			}
+
+			return
+		}
+
 		fmt.Println("Message send")
 	})
 
