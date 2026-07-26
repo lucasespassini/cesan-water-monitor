@@ -23,7 +23,7 @@ func App(ctx context.Context) (*Application, error) {
 	}
 
 	env := NewEnv()
-	redis := NewRedisClient(env.RedisAddress)
+	redis := NewRedisClient(env.RedisAddress, env.RedisUser, env.RedisPassword)
 	err = redis.Ping(ctx).Err()
 	if err != nil {
 		panic(err)
