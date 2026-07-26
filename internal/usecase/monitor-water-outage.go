@@ -84,7 +84,7 @@ func (u MonitorWaterOutageUseCase) Run(ctx context.Context) error {
 		err = NotifyWaterOutage(
 			ctx,
 			u.Telegram,
-			-5403784302,
+			-1004491522361,
 			normalizedTitle,
 			e.Request.AbsoluteURL(href),
 		)
