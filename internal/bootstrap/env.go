@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -16,10 +15,7 @@ type Env struct {
 }
 
 func NewEnv() *Env {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	_ = godotenv.Load()
 
 	return &Env{
 		AGazetaCesanUrl: os.Getenv("AGAZETA_CESAN_URL"),
